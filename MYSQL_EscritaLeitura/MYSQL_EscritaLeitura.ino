@@ -4,6 +4,8 @@
 #include <avr/pgmspace.h>
 #include <stdlib.h>
 #include <mysql.h>
+#include <SPI.h>
+#include <MFRC522.h>
 
 byte mac_addr[] = {0x90, 0xA2, 0xDA, 0x00, 0xC9, 0xB9}; //endereço MAC do arduino
 IPAddress server_addr(192,168,43,113);		//endereço de IP do Raspberry Pi
