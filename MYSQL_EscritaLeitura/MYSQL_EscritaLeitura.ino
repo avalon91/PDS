@@ -19,7 +19,7 @@ bool flag = false;
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 byte mac_addr[] = {0x90, 0xA2, 0xDA, 0x00, 0xC9, 0xB9}; //endereço MAC do arduino
-IPAddress server_addr(192,168,0,106);		//endereço de IP do Raspberry Pi
+IPAddress server_addr(10,6,2,206);		//endereço de IP do Raspberry Pi
 char user[] = "arduino";				//nome de usuário para acessar a database
 char password[] = "senha";				//senha do usuário
 
@@ -36,7 +36,8 @@ const char TEST_SELECT_QUERY[] = "SELECT * FROM dbteste.log";
 //string contendo o comando de seleção dos todos os dados da tabela 'log', dentro da database 'dbteste'
 
 void setup(){
-  SPI.begin();      // Inicia  SPI bus
+  pinMode(2, INPUT);
+  //SPI.begin();      // Inicia  SPI bus
   mfrc522.PCD_Init();   // Inicia MFRC522
   Ethernet.begin(mac_addr);
 	Serial.begin(9600);
@@ -86,17 +87,19 @@ void setup(){
 }
 
 void loop(){
-  tag = readRFID();
-  if(flag == true){
-    char tagC[12];
-    leHora();
-    tag.toCharArray(tagC, sizeof(unsigned int));
-    strcat(query, tagC);
-    strcat(query, ")");
-    Serial.println(query);
-    my_conn.cmd_query(query);
-    flag = false;
-    delay(1000);
+  if(digitalRead(2) == HIGH){
+    tag = readRFID();
+    if(flag == true){
+      char tagC[12];
+      leHora();
+      tag.toCharArray(tagC, sizeof(unsigned int));
+      strcat(query, tagC);
+      strcat(query, ")");
+      Serial.println(query);
+      my_conn.cmd_query(query);
+      flag = false;
+      delay(1000);
+    }
   }
 }
 
